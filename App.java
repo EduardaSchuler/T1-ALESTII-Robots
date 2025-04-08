@@ -1,6 +1,7 @@
-import java.util.*;
+import java.util.Scanner;
 
 public class App {
+
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
@@ -13,36 +14,36 @@ public class App {
             receita[i] = scanner.nextInt();
         }
 
-        // Configuração inicial dos robôs (0 até n-1)
+        // Estado inicial dos robôs
         int[] estadoAtual = new int[n];
         for (int i = 0; i < n; i++) {
             estadoAtual[i] = i;
         }
 
-        Set<String> historico = new HashSet<>();
+        HistoricoEstados historico = new HistoricoEstados(10000, n); // pode ajustar o tamanho máximo
+
         int passos = 0;
 
         while (true) {
-            String estadoString = Arrays.toString(estadoAtual);
-
-            // Verifica se já dançou essa configuração antes
-            if (historico.contains(estadoString)) {
+            if (historico.jaExiste(estadoAtual)) {
                 break;
             }
 
-            historico.add(estadoString);
+            historico.adicionar(estadoAtual);
             passos++;
 
-            // Aplica a receita
+            // Calcula o próximo estado
             int[] proximoEstado = new int[n];
             for (int i = 0; i < n; i++) {
                 proximoEstado[i] = estadoAtual[receita[i]];
             }
 
-            System.out.println("");
-            for (int i = 0; i < estadoAtual.length; i++) {
+            // Apenas para visualização
+            for (int i = 0; i < n; i++) {
                 System.out.print(estadoAtual[i]);
             }
+            System.out.println();
+
             estadoAtual = proximoEstado;
         }
 
