@@ -1,12 +1,12 @@
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.*;
+import java.util.Scanner;
 
 public class App {
 
     public static void main(String[] args) {
         try {
-            Scanner scanner = new Scanner(new File("CasosDeTeste\\caso79.txt"));
+            Scanner scanner = new Scanner(new File("CasosDeTeste\\caso_72.txt"));
 
             int n = scanner.nextInt();
 
@@ -20,16 +20,19 @@ public class App {
                 estadoAtual[i] = i;
             }
 
-            Set<String> historico = new HashSet<>();
+            int capacidadeHash = 100_000; // aumentada para reduzir colisões
+            HistoricoEstados historico = new HistoricoEstados(capacidadeHash, n);
+
             int passos = 0;
 
+            long inicio = System.currentTimeMillis(); // para medir o tempo
+
             while (true) {
-                String estadoStr = Arrays.toString(estadoAtual);
-                if (historico.contains(estadoStr)) {
+                if (historico.jaExiste(estadoAtual)) {
                     break;
                 }
 
-                historico.add(estadoStr);
+                historico.adicionar(estadoAtual);
                 passos++;
 
                 int[] proximoEstado = new int[n];
@@ -40,7 +43,11 @@ public class App {
                 estadoAtual = proximoEstado;
             }
 
+            long fim = System.currentTimeMillis();
+
             System.out.println("A dança terminou após " + passos + " passos.");
+            System.out.println("Tempo: " + (fim - inicio) + "ms");
+
             scanner.close();
 
         } catch (FileNotFoundException e) {
