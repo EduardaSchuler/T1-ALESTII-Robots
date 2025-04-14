@@ -1,63 +1,38 @@
 public class HistoricoEstados {
-    private int[][] tabela;
-    private boolean[] ocupado;
-    private int capacidade;
-    private int n;
 
-    public HistoricoEstados(int capacidade, int n) {
-        this.capacidade = capacidade;
-        this.n = n;
-        this.tabela = new int[capacidade][];
-        this.ocupado = new boolean[capacidade];
-    }
+    public static long contarRodadasAteRepeticao(int[] receita) {
+        int n = receita.length;
+        boolean[] visitado = new boolean[n];
+        long resultado = 1;
 
-    // Função de hash otimizada
-    private int hash(int[] estado) {
-        int hash = 0;
-        for (int i = 0; i < estado.length; i++) {
-            hash ^= (estado[i] + 0x9e3779b9 + (hash << 6) + (hash >> 2));
-        }
-        return Math.abs(hash % capacidade);
-    }
+        for (int i = 0; i < n; i++) {
+            if (!visitado[i]) {
+                int contador = 0;
+                int atual = i;
 
-    public boolean jaExiste(int[] estado) {
-        int pos = hash(estado);
+                while (!visitado[atual]) {
+                    visitado[atual] = true;
+                    atual = receita[atual];
+                    contador++;
+                }
 
-        for (int i = 0; i < capacidade; i++) {
-            int idx = (pos + i) % capacidade;
-
-            if (!ocupado[idx]) return false;
-
-            if (iguais(tabela[idx], estado)) return true;
-        }
-
-        return false;
-    }
-
-    public void adicionar(int[] estado) {
-        int pos = hash(estado);
-
-        for (int i = 0; i < capacidade; i++) {
-            int idx = (pos + i) % capacidade;
-
-            if (!ocupado[idx]) {
-                tabela[idx] = estado.clone();
-                ocupado[idx] = true;
-                return;
+                resultado = mmc(resultado, contador);
             }
-
-            if (iguais(tabela[idx], estado)) return;
         }
+
+        return resultado;
     }
 
-    private boolean iguais(int[] a, int[] b) {
-        if (a == null || b == null) return false;
-        if (a.length != b.length) return false;
+    private static long mmc(long a, long b) {
+        return a * (b / mdc(a, b));
+    }
 
-        for (int i = 0; i < a.length; i++) {
-            if (a[i] != b[i]) return false;
+    private static long mdc(long a, long b) {
+        while (b != 0) {
+            long temp = a % b;
+            a = b;
+            b = temp;
         }
-
-        return true;
+        return a;
     }
 }

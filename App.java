@@ -6,42 +6,17 @@ public class App {
 
     public static void main(String[] args) {
         try {
-            Scanner scanner = new Scanner(new File("CasosDeTeste\\caso_72.txt"));
+            Scanner scanner = new Scanner(new File("CasosDeTeste\\caso_12.txt"));
 
             int n = scanner.nextInt();
-
             int[] receita = new int[n];
             for (int i = 0; i < n; i++) {
                 receita[i] = scanner.nextInt();
             }
 
-            int[] estadoAtual = new int[n];
-            for (int i = 0; i < n; i++) {
-                estadoAtual[i] = i;
-            }
+            long inicio = System.currentTimeMillis();
 
-            int capacidadeHash = 100_000; // aumentada para reduzir colisões
-            HistoricoEstados historico = new HistoricoEstados(capacidadeHash, n);
-
-            int passos = 0;
-
-            long inicio = System.currentTimeMillis(); // para medir o tempo
-
-            while (true) {
-                if (historico.jaExiste(estadoAtual)) {
-                    break;
-                }
-
-                historico.adicionar(estadoAtual);
-                passos++;
-
-                int[] proximoEstado = new int[n];
-                for (int i = 0; i < n; i++) {
-                    proximoEstado[i] = estadoAtual[receita[i]];
-                }
-
-                estadoAtual = proximoEstado;
-            }
+            long passos = HistoricoEstados.contarRodadasAteRepeticao(receita);
 
             long fim = System.currentTimeMillis();
 
@@ -49,7 +24,6 @@ public class App {
             System.out.println("Tempo: " + (fim - inicio) + "ms");
 
             scanner.close();
-
         } catch (FileNotFoundException e) {
             System.out.println("Arquivo não encontrado.");
         }
