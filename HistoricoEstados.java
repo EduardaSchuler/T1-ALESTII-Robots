@@ -1,38 +1,48 @@
 public class HistoricoEstados {
+    private int[] receita;
+    private boolean[] visitados;
+    private int quantidadePessoas;
+    private long totalPassos;
 
-    public static long contarRodadasAteRepeticao(int[] receita) {
-        int n = receita.length;
-        boolean[] visitado = new boolean[n];
-        long resultado = 1;
+    public HistoricoEstados(int[] receita) {
+        this.receita = receita;
+        this.quantidadePessoas = receita.length;
+        this.visitados = new boolean[quantidadePessoas];
+        this.totalPassos = 1;
+        contaEstados();
+    }
 
-        for (int i = 0; i < n; i++) {
-            if (!visitado[i]) {
-                int contador = 0;
-                int atual = i;
+    private void contaEstados() {
+        for (int pessoa = 0; pessoa < quantidadePessoas; pessoa++) {
+            if (!visitados[pessoa]) {
+                int tamanhoCiclo = 0;
+                int atual = pessoa;
 
-                while (!visitado[atual]) {
-                    visitado[atual] = true;
+                while (!visitados[atual]) {
+                    visitados[atual] = true;
                     atual = receita[atual];
-                    contador++;
+                    tamanhoCiclo++;
                 }
 
-                resultado = mmc(resultado, contador);
+                totalPassos = calcularMMC(totalPassos, tamanhoCiclo);
             }
         }
-
-        return resultado;
     }
 
-    private static long mmc(long a, long b) {
-        return a * (b / mdc(a, b));
+    private long calcularMMC(long a, long b) {
+        return a * (b / calcularMDC(a, b));
     }
 
-    private static long mdc(long a, long b) {
+    private long calcularMDC(long a, long b) {
         while (b != 0) {
-            long temp = a % b;
+            long resto = a % b;
             a = b;
-            b = temp;
+            b = resto;
         }
         return a;
+    }
+
+    public long getTotalPassos() {
+        return totalPassos;
     }
 }

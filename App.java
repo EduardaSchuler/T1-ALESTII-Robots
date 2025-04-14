@@ -6,7 +6,7 @@ public class App {
 
     public static void main(String[] args) {
         try {
-            Scanner scanner = new Scanner(new File("CasosDeTeste\\caso_12.txt"));
+            Scanner scanner = new Scanner(new File("CasosDeTeste\\caso_192.txt"));
 
             int n = scanner.nextInt();
             int[] receita = new int[n];
@@ -16,7 +16,8 @@ public class App {
 
             long inicio = System.currentTimeMillis();
 
-            long passos = HistoricoEstados.contarRodadasAteRepeticao(receita);
+            HistoricoEstados historico = new HistoricoEstados(receita);
+            long passos = historico.getTotalPassos();
 
             long fim = System.currentTimeMillis();
 
